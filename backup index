@@ -1,0 +1,322 @@
+'use strict';
+/* eslint-disable*/
+
+//const myLinkedList = (id, size, head, tail) => {
+const myLinkedList = (id) => {
+  // id                --> identifier of the linked list. So we can have several.
+  let size = 0; //     --> current number of elements contained
+  let head = null; //  --> the pointer to the head of the linkedlist
+  let tail = null; //  --> the pointer to the tail of the linkedlist
+
+  // adds a new node to the end of the list
+  const append = (v) => {
+    // v for vendetta, I mean, for value.
+    size++;
+    if (size === 1) {
+      // first element in the linkedList
+      const newNode = node(v, size, null, null);
+      head = newNode;
+      tail = newNode;
+    } else {
+      // last element in the Linkedlist
+      const prevNode = tail;
+      const newNode = node(v, size, null, prevNode);
+      prevNode.nextNode = newNode;
+      tail = newNode;
+    }
+  };
+
+  // adds a new node to the start of the list
+  const prepend = (v) => {
+    const newNode = node(v, 1, head, null); // the node we're wona prepend
+
+    if (head !== null) {
+      const prevHead = head; // the head that now will bhe the second element.
+      prevHead.prevNode = newNode;
+    }
+
+    head = newNode; // now the linkedlist head is the new node.
+    size++;
+    if (size === 1) {
+      // first element in the linkedlist
+      tail = newNode;
+    }
+  };
+
+  // returns the size of the linkedlist.
+  const getSize = () => {
+    if (size === null || size === undefined) {
+      return 0;
+    }
+
+    return size;
+  };
+
+  // NO DIRTY JOKES.
+  const getHead = () => {
+    return head;
+  };
+
+  // NO DIRTY JOKES.
+  const getTail = () => {
+    return tail;
+  };
+
+  // returns the node at the given index
+  const at = (index) => {
+    //console.log('<at> ' + index);
+
+    if (index > size) return null; // we don't have that many nodes
+    if (index === 1) return head;
+    if (index === size) return tail;
+
+    let node = {};
+    const middle = parseInt(size / 2);
+
+    if (index <= middle) {
+      node = head;
+      // the search begins from the head
+      for (let i = 2; i <= index; i++) {
+        node = node.nextNode;
+      }
+    } else {
+      // the search begins from the tail
+      node = tail;
+      for (let i = size - 1; i >= index; i--) {
+        node = node.prevNode;
+      }
+    }
+    return node;
+  };
+
+  // removes the last element from the list
+  const pop = () => {
+    // here lies code
+    size--;
+    const newLastNode = tail.prevNode;
+    tail = newLastNode;
+  };
+
+  // returns true if the value is in some node of the linkedlist, else returns false
+  const contains = (v) => {
+    let node = head;
+
+    for (let i = 1; i >= size; i++) {
+      if (node.value === v) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  // returns the index of the node containing such value, else returns null
+  const find = (v) => {
+    let node = head;
+
+    for (let i = 1; i >= size; i++) {
+      if (node.value === v) {
+        return node.index;
+      }
+    }
+    return null;
+  };
+
+  // represent the LinkedList as an string like (value) -> (value) -> (value) -> null
+  const toString = () => {
+    if (size === 0) return 'null';
+
+    let node = head;
+    let cadena = ''; // cadena is String in spanish, can also be chain, you're welcome for the free info
+
+    while (node !== null && node !== undefined) {
+      cadena += '(' + String(node.value) + ')->';
+      node = node.nextNode;
+    }
+    cadena += 'null';
+
+    return cadena;
+  };
+
+  // inserts a new node with the value in the index provided
+  const insertAt = (v, index) => {
+    // v for value, ind for index
+    const actualNode = at(index);
+    const prevNode = actualNode.prevNode;
+    const nextNode = actualNode.nextNode;
+    const newNode = node(v, index, nextNode, prevNode);
+    nextNode.prevNode = newNode;
+    prevNode.nextNode = newNode;
+    if (index === 1) {
+      head = newNode;
+    }
+    if (index === size) {
+      tail = newNode;
+    }
+  };
+
+  // removes the node at the index provided
+  const removeAt = (index) => {
+    // v for value, ind for index
+    const actualNode = at(index);
+    const prevNode = actualNode.prevNode;
+    const nextNode = actualNode.nextNode;
+    nextNode.prevNode = prevNode;
+    prevNode.nextNode = nextNode;
+    if (index === 1) {
+      head = nextNode;
+    }
+    if (index === size) {
+      tail = prevNode;
+    }
+  };
+
+  return {
+    id,
+    size,
+    head,
+    tail,
+    append,
+    prepend,
+    getSize,
+    getHead,
+    getTail,
+    at,
+    pop,
+    contains,
+    find,
+    toString,
+    insertAt,
+    removeAt,
+  };
+};
+
+// my node object
+const node = (value, index, nextNode, prevNode) => {
+  const toString2 = () => {
+    const valueNode = value != null ? value : 'null';
+    const valueNext = nextNode != null ? nextNode.value : 'null';
+    const valuePrev = prevNode != null ? prevNode.value : 'null';
+
+    return `(${valueNode}) | nextNode (${valueNext}) | prevNode (${valuePrev})`;
+  };
+
+  // return { value, index, nextNode, prevNode, toString2 };
+  return {
+    set value(arg) {
+      value = arg;
+    },
+
+    get value() {
+      return value;
+    },
+
+    set index(arg) {
+      index = arg;
+    },
+
+    get index() {
+      return index;
+    },
+
+    set nextNode(arg) {
+      nextNode = arg;
+    },
+
+    get nextNode() {
+      return nextNode;
+    },
+
+    set prevNode(arg) {
+      prevNode = arg;
+    },
+
+    get prevNode() {
+      return prevNode;
+    },
+    toString2,
+  };
+};
+
+const list = myLinkedList('test');
+//console.log('list.getSize(): ' + list.getSize());
+//testAppend();
+testPreppend();
+console.log(list.toString());
+console.log(list.at(1).toString2());
+console.log(list.at(2).toString2());
+console.log(list.at(4).toString2());
+console.log(list.at(5).toString2());
+console.log(list.at(6).toString2());
+console.log(list.at(7).toString2());
+console.log(list.at(8).toString2());
+console.log(list.at(9).toString2());
+console.log(list.at(10).toString2());
+console.log(list.at(11).toString2());
+console.log(list.at(12).toString2());
+
+//console.log(list.at(1).toString2());
+//console.log(list.at(1).toString2());
+
+function testAppend() {
+  list.append('A');
+  list.append('B');
+  list.append('C');
+  //   list.append('D');
+  //   list.append('E');
+  //   list.append('F');
+  //   list.append('G');
+  //   list.append('H');
+  //   list.append('I');
+  //   list.append('J');
+  //   list.append('K');
+  //   list.append('L');
+}
+
+function testPreppend() {
+  list.prepend('A');
+  list.prepend('B');
+  list.prepend('C');
+  list.prepend('D');
+  list.prepend('E');
+  list.prepend('F');
+  list.prepend('G');
+  list.prepend('H');
+  list.prepend('I');
+  list.prepend('J');
+  list.prepend('K');
+  list.prepend('L');
+}
+
+// return {
+//     get id() {
+//       return id;
+//     },
+//     get size() {
+//       if (size === null || size === undefined) {
+//         return 0;
+//       }
+//       return size;
+//     },
+//     get head() {
+//       return head;
+//     },
+//     get tail() {
+//       return tail;
+//     },
+//     set id(arg) {
+//       id = arg;
+//     },
+//     set size(arg) {
+//       if (arg === null || arg === undefined) {
+//         arg = 0;
+//       }
+//       size = arg;
+//     },
+//     set head(arg) {
+//       head = arg;
+//     },
+//     set tail(arg) {
+//       tail = arg;
+//     },
+//   }
